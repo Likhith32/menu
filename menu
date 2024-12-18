@@ -1,0 +1,137 @@
+import sys
+menu = [
+    {"name": "Chicken Biryani", "price": 299, "description": "Biryani with extra spicy chicken."},
+    {"name": "Mutton Biryani", "price": 449, "description": "Mutton with spicy dum biryani."},
+    {"name": "Mugalai Biryani", "price": 399, "description": " It traces its origins to the royal kitchens of the Mughal Empire in India."},
+    {"name": "Chicken Tikka Masala", "price": 299, "description": "Marinated chicken in a creamy tomato-based sauce."},
+    {"name": "Butter Chicken", "price": 299, "description": "Marinated chicken in a rich, creamy sauce."},
+    {"name": "Chicken Korma", "price": 349, "description": "Mild and creamy chicken curry."},
+    {"name": "Tandoori Naan", "price": 399, "description": " Leavened, butter-topped flatbread cooked in a clay oven ."},
+    {"name": "Vegetable Biryani", "price": 299, "description": " Mixed vegetable and basmati rice dish."}
+]
+
+
+order = []
+
+def display_menu():
+    print("\n* Restaurant Menu *")
+    if not menu:
+        print("The menu is currently empty.")
+    else:
+        for idx, item in enumerate(menu, start=1):
+            print(f"{idx}. {item['name']} - {item['price']:.2f}Rs\n   {item['description']}")
+    print("\n")
+
+def add_menu_item():
+    name = input("Enter the name of the new dish: ").strip()
+    try:
+        price = float(input("Enter the price of the dish: ").strip())
+    except ValueError:
+        print("Invalid price input. Please enter a numeric value.")
+        return
+    description = input("Enter a description for the dish: ").strip()
+
+    menu.append({"name": name, "price": price, "description": description})
+    print(f"Dish '{name}' added to the menu.")
+
+def edit_menu_item():
+    display_menu()
+    try:
+        item_number = int(input("Enter the number of the item to edit: ").strip())
+        if 1 <= item_number <= len(menu):
+            item = menu[item_number - 1]
+            print(f"Editing '{item['name']}'")
+
+            new_name = input("Enter new name (leave blank to keep current): ").strip()
+            new_price = input("Enter new price (leave blank to keep current): ").strip()
+            new_description = input("Enter new description (leave blank to keep current): ").strip()
+
+            if new_name:
+                item['name'] = new_name
+            if new_price:
+                try:
+                    item['price'] = float(new_price)
+                except ValueError:
+                    print("Invalid price input. Keeping the current price.")
+            if new_description:
+                item['description'] = new_description
+
+            print(f"Item updated to: {item['name']} - {item['price']:.2f}Rs\n   {item['description']}")
+        else:
+            print("Invalid item number.")
+    except ValueError:
+        print("Please enter a valid number.")
+
+def delete_menu_item():
+    
+    display_menu()
+    try:
+        item_number = int(input("Enter the number of the item to delete: ").strip())
+        if 1 <= item_number <= len(menu):
+            removed_item = menu.pop(item_number - 1)
+            print(f"Item '{removed_item['name']}' removed from the menu.")
+        else:
+            print("Invalid item number.")
+    except ValueError:
+        print("Please enter a valid number.")
+
+def place_order():
+    display_menu()
+    total_cost = 0
+    while True:
+        try:
+            choice = input("Enter the number of the item you want to order (or 'done' to finish): ").strip()
+            if choice.lower() == 'done':
+                break
+            item_number = int(choice)
+            if 1 <= item_number <= len(menu):
+                ordered_item = menu[item_number - 1]
+                order.append(ordered_item)
+                total_cost += ordered_item['price']
+                print(f"Added '{ordered_item['name']}' to your order. Current total: {total_cost:.2f}Rs")
+            else:
+                print("Invalid item number. Please try again.")
+        except ValueError:
+            print("Invalid input. Please enter a valid number or 'done'.")
+
+    if order:
+        print("\nYour Order Summary:")
+        for idx, item in enumerate(order, start=1):
+            print(f"{idx}. {item['name']} - {item['price']:.2f}Rs")
+        print(f"\nTotal Cost: Rs{total_cost:.2f}")
+        order.clear()
+    else:
+        print("No items ordered.")
+
+def display_menu_options():
+
+    print("\n--- Restaurant Menu Program ---")
+    print("1. View Menu")
+    print("2. Add Menu Item")
+    print("3. Edit Menu Item")
+    print("4. Delete Menu Item")
+    print("5. Place an Order")
+    print("6. Exit")
+
+def main():
+    while True:
+        display_menu_options()
+        choice = input("Choose an option (1-6): ").strip()
+        if choice == "1":
+            display_menu()
+        elif choice == "2":
+            add_menu_item()
+        elif choice == "3":
+            edit_menu_item()
+        elif choice == "4":
+            delete_menu_item()
+        elif choice == "5":
+            place_order()
+        elif choice == "6":
+            print("Thank you for using the Restaurant Menu Program. Goodbye!")
+            sys.exit()
+        else:
+            print("Invalid option. Please choose a number between 1 and 6.")
+
+if __name__ == "__main__":
+    main()
